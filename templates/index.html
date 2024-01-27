@@ -205,11 +205,12 @@
           
                   <div class="wrapper-flex">
                     <div class="profile-wrapper">
-                      {% if current_user.is_authenticated %}
-                      <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User Profile Image" width="50px">
-                      {% else %}
-                          <img src="{{ url_for('static', filename='static/assets/images/default.png') }}" alt="Default Image" width="250" class="blog-banner-img">
-                      {% endif %}
+          
+                      {% for user in users %}
+  <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="User Profile Image" width="50px">
+{% endfor %}
+
+                   
                   </div>
                       <div class="wrapper">
                           <a href="#" class="h4">{{ blog.author }}</a>

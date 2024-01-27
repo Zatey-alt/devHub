@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -12,23 +13,23 @@
             <img src="{{ url_for('static', filename='blog_images/' + blog.image_file) }}" alt="{{ blog.title }}">
         {% endif %}
         <p>{{ blog.content }}</p>
-        {% if current_user.is_authenticated %}
+{% if current_user.is_authenticated %}
         <!-- Add a form for adding comments -->
         <form method="POST" action="{{ url_for('blog', blog_id=blog.id) }}" class="comment-form">
             <label for="comment_content">Add Comment:</label>
             <textarea name="comment_content" required style="width: 800px;"></textarea>
             <button type="submit" class="comment-button">Add Comment</button>
         </form>
-    {% endif %}
+{% endif %}
         <!-- Display comments -->
         <div class="comments">
             <h3>Comments:</h3>
             {% for comment in comments %}
                 <div class="comment">
                     <div class="comment-details">
-                        {% if current_user.is_authenticated and comment.author == current_user.username %}
-                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="Profile Image" id="comment-image">
-                    {% endif %}
+                        {% for user in users %}
+                        <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="User Profile Image" width="50px" id="comment-image">
+                      {% endfor %}
                         <p class="comment-author">{{ comment.author }}</p>
                         <p class="comment-time">{{ comment.created_at.strftime('%b %d, %Y %I:%M %p') }}</p>
                     </div>

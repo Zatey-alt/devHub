@@ -95,7 +95,8 @@ def load_user(user_id):
 @app.route('/')
 def home():
     blogs = Blog.query.all()
-    return render_template('index.html', blogs=blogs)
+    users = User.query.all()
+    return render_template('index.html', blogs=blogs, users=users)
 
 
 @app.route('/homepage')
@@ -277,6 +278,7 @@ def update_profile():
 
 @app.route('/blog/<int:blog_id>', methods=['GET', 'POST'])
 def blog(blog_id):
+    users = User.query.all()
     blog = Blog.query.get_or_404(blog_id)
     comments = Comment.query.filter_by(blog_id=blog.id).all()
 
@@ -292,7 +294,7 @@ def blog(blog_id):
         flash('Comment added successfully!', 'success')
         return redirect(url_for('blog', blog_id=blog.id))
 
-    return render_template('blog.html', blog=blog, comments=comments)
+    return render_template('blog.html', blog=blog, comments=comments, users=users)
 
 
 
