@@ -63,6 +63,10 @@
             <li>
                 <a href="{{ url_for('home') }}" class="nav-link">Home</a>
             </li>
+            <ul class="desktop-nav">
+              <li>
+                  <a href="{{ url_for('jobs') }}" class="nav-link">Jobs</a>
+              </li>
         
             {% if current_user.is_authenticated %}
                 <!-- Show "My Post" when the user is logged in -->
@@ -106,17 +110,36 @@
             <p class="h3 nav-title">Main Menu</p>
 
             <ul>
-              <li class="nav-item">
-                <a href="#" class="nav-link">Home</a>
+              <li>
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            </li>
+            <ul class="desktop-nav">
+              <li>
+                  <a href="{{ url_for('jobs') }}" class="nav-link">Jobs</a>
               </li>
-
-              <li class="nav-item">
-                <a href="#" class="nav-link">About Me</a>
-              </li>
-
-              <li class="nav-item">
+        
+            {% if current_user.is_authenticated %}
+                <!-- Show "My Post" when the user is logged in -->
+                <li>
+                    <a href="{{ url_for('homepage') }}" class="nav-link">My Post</a>
+                </li>
+                <!-- You can add other links specific to authenticated users here -->
+                <li>
+                    <a href="{{ url_for('signout') }}" class="nav-link">Sign Out</a>
+                </li>
+            {% else %}
+                <!-- Show "Sign Up" and "Sign In" when the user is not logged in -->
+                <li>
+                    <a href="{{ url_for('signup') }}" class="nav-link">Signup</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('signin') }}" class="nav-link">Signin</a>
+                </li>
+            {% endif %}
+        
+            <li>
                 <a href="#" class="nav-link">Contact</a>
-              </li>
+            </li>
             </ul>
 
           </div>

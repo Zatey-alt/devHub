@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+import requests
+
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
@@ -266,10 +268,14 @@ def delete_blog(blog_id):
 
 
 
-
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
+    # Check if the current user is trying to update their own profile
+    if current_user.id != int(request.form['user_id']):
+        flash('You are not allowed to update another user\'s profile', 'danger')
+        return redirect(url_for('profile'))
+
     # Get the file from the request
     file = request.files['profile_image']
 
@@ -280,9 +286,16 @@ def update_profile():
     # Update the user's profile_image field in the database
     if filename:
         current_user.image_file = filename
-        db.session.commit()
 
+    # Update other profile information
+    current_user.username = request.form['username']
+
+    # Commit changes to the database
+    db.session.commit()
+
+    flash('Profile updated successfully!', 'success')
     return redirect(url_for('profile'))
+
 
 @app.route('/blog/<int:blog_id>', methods=['GET', 'POST'])
 def blog(blog_id):
@@ -350,6 +363,33 @@ def update_blog(blog_id):
 
     return redirect(url_for('homepage'))
 
+
+
+
+@app.route('/jobs')
+def jobs():
+    # ArbeitNow API endpoint for job listings
+    api_url = 'https://arbeitnow.com/api/job-board-api'
+
+    # You can customize the parameters based on your needs
+    params = {
+        'page': 1,  # Specify the page number (you can paginate through results)
+        # Add more parameters if needed
+    }
+
+    # Make the API request
+    response = requests.get(api_url, params=params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        jobs_data = response.json()
+
+        # Render the template with the job data
+        return render_template('jobs.html', jobs=jobs_data['data'])
+    else:
+        # If the request was unsuccessful, handle the error
+        return f"Error: {response.status_code}"
 
 if __name__ == '__main__':
     with app.app_context():
