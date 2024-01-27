@@ -96,7 +96,15 @@ def load_user(user_id):
 def home():
     blogs = Blog.query.all()
     users = User.query.all()
-    return render_template('index.html', blogs=blogs, users=users)
+
+    # Fetch comments separately for each blog
+    comments = []
+    for blog in blogs:
+        blog_comments = Comment.query.filter_by(blog_id=blog.id).all()
+        comments.extend(blog_comments)
+
+    return render_template('index.html', blogs=blogs, users=users, comments=comments)
+
 
 
 @app.route('/homepage')

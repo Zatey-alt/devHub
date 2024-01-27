@@ -219,6 +219,9 @@
                               <span class="separator"></span>
                               <ion-icon name="time-outline"></ion-icon>
                               <time datetime="{{ blog.read_time }}">{{ blog.read_time }}</time>
+                              {% set len = range(1) | length %}
+                              <p class="blog-text">Comments: {{ blog.comments|length }}</p>
+
                           </p>
                       </div>
                   </div>
