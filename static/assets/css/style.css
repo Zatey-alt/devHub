@@ -562,7 +562,7 @@ footer .wrapper { text-align: center; }
  * responsive for larger than 550px screen
  */
 
-@media (min-width: 550px) {
+@media (min-width: 4300px) {
 
   :root {
 

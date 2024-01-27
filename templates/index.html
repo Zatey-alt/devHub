@@ -197,9 +197,10 @@
                   <div class="wrapper-flex">
                     <div class="profile-wrapper">
           
-                      {% for user in users %}
-  <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="User Profile Image" width="50px">
-{% endfor %}
+                      <div class="profile-wrapper">
+                        <img src="{{ url_for('static', filename='profile_pics/' + blog.author_image) }}" alt="User Profile Image" width="50px">
+                    </div>
+                    
 
                    
                   </div>
