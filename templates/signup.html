@@ -1,0 +1,163 @@
+<!-- templates/signin.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: hsl(218, 23%, 23%);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+           
+            display: flex;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 20px;
+            
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color:  hsl(229, 76%, 66%);
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+
+        a {
+            color: hsl(229, 76%, 66%);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='assets/images/a2.jpg') }}" alt="Image Description">
+        </div>
+        <div></div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <form id="signupForm" method="POST" action="{{ url_for('signup') }}">
+            <img src="/static/assets/images/black.png" alt="Logo" width="150" >
+            <h2>Signup</h2>
+
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" name="confirm_password" id="confirm_password" required>
+
+            <button type="submit" onclick="showLoading()" id="signupButton" disabled>Signup</button>
+            <p>Already have an account? <a href="{{ url_for('signin') }}">Signin here</a></p>
+            <p><a href="{{ url_for('home') }}">Home</a></p>
+        </form>
+    </div>
+
+    <script>
+        // Function to show loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // Function to enable/disable Signup button based on field values
+        function updateSignupButtonState() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm_password = document.getElementById('confirm_password').value;
+
+            const signupButton = document.getElementById('signupButton');
+            const isDisabled = !(username && email && password && confirm_password);
+            signupButton.disabled = isDisabled;
+        }
+
+        // Add event listeners to input fields to update Signup button state
+        document.getElementById('username').addEventListener('input', updateSignupButtonState);
+        document.getElementById('email').addEventListener('input', updateSignupButtonState);
+        document.getElementById('password').addEventListener('input', updateSignupButtonState);
+        document.getElementById('confirm_password').addEventListener('input', updateSignupButtonState);
+    </script>
+
+</body>
+
+</html
