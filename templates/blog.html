@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
     <div class="content">
         <h2>{{ blog.title }}</h2>
         <div class="blog-meta">
@@ -18,7 +19,7 @@
             <textarea name="comment_content" required style="width: 800px;"></textarea>
             <button type="submit" class="comment-button">Add Comment</button>
         </form>
-
+{% endif %}
         <!-- Display comments -->
         <div class="comments">
             <h3>Comments:</h3>
