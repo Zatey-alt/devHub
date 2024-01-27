@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if current_user.is_authenticated %}
+
     <div class="content">
         <h2>{{ blog.title }}</h2>
         <div class="blog-meta">
@@ -12,7 +12,7 @@
             <img src="{{ url_for('static', filename='blog_images/' + blog.image_file) }}" alt="{{ blog.title }}">
         {% endif %}
         <p>{{ blog.content }}</p>
-
+        {% if current_user.is_authenticated %}
         <!-- Add a form for adding comments -->
         <form method="POST" action="{{ url_for('blog', blog_id=blog.id) }}" class="comment-form">
             <label for="comment_content">Add Comment:</label>
