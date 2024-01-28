@@ -134,12 +134,18 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']
 
         # Check if the email already exists
         existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
             flash('Email already exists. Please choose a different email.', 'danger')
+            return render_template('signup.html')
+
+        # Check if passwords match
+        if password != confirm_password:
+            flash('Passwords do not match. Please enter matching passwords.', 'danger')
             return render_template('signup.html')
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -158,7 +164,6 @@ def signup():
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     if current_user.is_authenticated:
-        # If the user is already logged in, redirect them to the homepage
         return redirect(url_for('homepage'))
 
     if request.method == 'POST':
@@ -167,15 +172,17 @@ def signin():
 
         user = User.query.filter_by(email=email).first()
 
-        if user and bcrypt.check_password_hash(user.password, password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('homepage'))
+        if user:
+            if bcrypt.check_password_hash(user.password, password):
+                login_user(user)
+                flash('Login successful!', 'success')
+                return redirect(url_for('homepage'))
+            else:
+                flash('Login failed. Incorrect password.', 'danger')
         else:
-            flash('Login failed. Check your email and password.', 'danger')
+            flash('Login failed. User not found. Check your email.', 'danger')
 
     return render_template('signin.html')
-
 
 @app.route('/signout')
 @login_required
