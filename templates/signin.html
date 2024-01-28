@@ -181,16 +181,14 @@ button:disabled {
 
 
     <script>
-        // Function to show loading overlay
-        function showLoading(formType) {
+        document.addEventListener('DOMContentLoaded', function () {
+            const signinForm = document.getElementById('signinForm');
             const loadingOverlay = document.getElementById('loadingOverlay');
-            const formId = formType === 'signup' ? 'signupForm' : 'signinForm';
     
-            document.getElementById(formId).addEventListener('submit', function () {
+            signinForm.addEventListener('submit', function () {
                 loadingOverlay.style.display = 'flex';
             });
-        }
-        
+        });
     </script>
         
 </body>
