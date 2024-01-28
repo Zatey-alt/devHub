@@ -54,8 +54,7 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=False)
-
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id', ondelete='CASCADE'), nullable=False)
     def __repr__(self):
         return f"Comment('{self.content}', '{self.author}', '{self.created_at}')"
 
@@ -254,19 +253,23 @@ def save_profile_image(file):
             return filename
     return None
 
-
 @app.route('/delete_blog/<int:blog_id>')
 @login_required
 def delete_blog(blog_id):
     blog = Blog.query.get(blog_id)
 
     if blog:
+        # Delete associated comments first
+        Comment.query.filter_by(blog_id=blog.id).delete()
+        db.session.commit()
+
+        # Then delete the blog post
         db.session.delete(blog)
         db.session.commit()
-        flash('Blog post deleted successfully!', 'success')
 
-    return redirect(url_for('home'))
+        flash('Blog post and associated comments deleted successfully!', 'success')
 
+    return redirect(url_for('homepage'))
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -391,6 +394,24 @@ def jobs():
     else:
         # If the request was unsuccessful, handle the error
         return f"Error: {response.status_code}"
+
+
+@app.route('/add_comment/<int:blog_id>', methods=['POST'])
+@login_required
+def add_comment(blog_id):
+    if request.method == 'POST':
+        content = request.form['comment_content']
+        author = current_user.username
+
+        # Make sure to provide the blog_id when creating a new comment
+        new_comment = Comment(content=content, author=author, blog_id=blog_id)
+        db.session.add(new_comment)
+        db.session.commit()
+
+        flash('Comment added successfully!', 'success')
+        return redirect(url_for('blog', blog_id=blog_id))
+
+
 
 if __name__ == '__main__':
     with app.app_context():

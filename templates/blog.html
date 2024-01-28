@@ -15,7 +15,7 @@
         <p>{{ blog.content }}</p>
 {% if current_user.is_authenticated %}
         <!-- Add a form for adding comments -->
-        <form method="POST" action="{{ url_for('blog', blog_id=blog.id) }}" class="comment-form">
+        <form method="POST"  action="{{ url_for('add_comment', blog_id=blog.id) }}" class="comment-form">
             <label for="comment_content">Add Comment:</label>
             <textarea name="comment_content" required style="width: 800px;"></textarea>
             <button type="submit" class="comment-button">Add Comment</button>
