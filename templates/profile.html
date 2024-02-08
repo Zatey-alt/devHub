@@ -75,37 +75,51 @@
         }
 
         .image-container {
-            text-align: center;
-            margin-top: 20px;
-        }
+    text-align: center;
+    margin-top: 20px;
+}
 
-        .image-container img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
+.container img {
+    max-width: 100%;
+    object-fit: cover;
+    width:  56px;
+    height: 56px;
+    background: var(--action-primary);
+    padding: 3px;
+    border-radius: 50%;  /* Added to make the image cover the container */
+}
     </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h2>User Profile</h2>
-
-        <div class="image-container">
-            <img src="{{ url_for('static', filename='assets/images/user_profile.jpg') }}" alt="User Profile Image">
-        </div>
-
+        <h1>User Profile</h1>
+    
+        <!-- Display user information -->
+        <p>Username: {{ current_user.username }}</p>
+        <p>Email: {{ current_user.email }}</p>
+        <p>Profile Image:</p>
+        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="Profile Image" width="250px" id="image">
+    
+        <!-- Update Profile Form -->
+        <h2>Update Profile</h2>
         <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
-            <label for="username">Username:</label>
+            <!-- Add the 'user_id' input field with the current user's ID -->
+            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+    
+            <!-- Your other form fields go here -->
+    
+            <label for="username">Username</label>
             <input type="text" name="username" value="{{ current_user.username }}" required>
-
-            <label for="profile_image">Profile Image:</label>
+    
+            <label for="profile_image">Profile Image</label>
             <input type="file" name="profile_image">
-
+    
             <button type="submit">Update Profile</button>
         </form>
-
         <p><a href="{{ url_for('homepage') }}">Back to Home</a></p>
+    
     </div>
 
 </body>

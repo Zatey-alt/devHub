@@ -218,9 +218,9 @@
                               <time datetime="{{ blog.created_at }}">{{ blog.created_at.strftime('%b %d, %Y') }}</time>
                               <span class="separator"></span>
                               <ion-icon name="time-outline"></ion-icon>
-                              <time datetime="{{ blog.read_time }}">{{ blog.read_time }}</time>
+                              <time>{{ blog.read_time }}</time>
                               {% set len = range(1) | length %}
-                              <p class="blog-text">Comments: {{ blog.comments|length }}</p>
+                              <p class="blog-text"><ion-icon name="chatbubbles-outline"></ion-icon> {{ blog.comments|length }}</p>
 
                           </p>
                       </div>

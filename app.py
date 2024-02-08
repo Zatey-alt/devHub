@@ -95,7 +95,7 @@ def load_user(user_id):
 # Routes
 @app.route('/')
 def home():
-    blogs = Blog.query.all()
+    blogs = Blog.query.order_by(Blog.created_at.desc()).all()
     users = User.query.all()
     comments = []
 
@@ -106,7 +106,9 @@ def home():
 
     return render_template('index.html', blogs=blogs, users=users, comments=comments, user=current_user)
 
-
+@app.route('/add')
+def add():
+    return render_template('add.html')
 
 
 @app.route('/homepage')
@@ -225,7 +227,7 @@ def add_blog():
             author=author,
             image_file=new_blog_image,
             topic=topic,
-            author_image=author_image,  
+            author_image=author_image,  # Set the author_image field here
             created_at=datetime.utcnow()
         )
 
@@ -282,30 +284,34 @@ def delete_blog(blog_id):
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
-    # Check if the current user is trying to update their own profile
-    if current_user.id != int(request.form['user_id']):
-        flash('You are not allowed to update another user\'s profile', 'danger')
+    # Check if 'user_id' is in the form data
+    if 'user_id' not in request.form:
+        flash('User ID is missing in the form data', 'danger')
         return redirect(url_for('profile'))
 
-    # Get the file from the request
-    file = request.files['profile_image']
+    try:
+        # Get the file from the request
+        file = request.files['profile_image']
 
-    # Save the file to your static folder or another location
-    # Generate a unique filename to avoid conflicts
-    filename = save_profile_image(file)
+        # Save the file to your static folder or another location
+        # Generate a unique filename to avoid conflicts
+        filename = save_profile_image(file)
 
-    # Update the user's profile_image field in the database
-    if filename:
-        current_user.image_file = filename
+        # Update the user's profile_image field in the database
+        if filename:
+            current_user.image_file = filename
 
-    # Update other profile information
-    current_user.username = request.form['username']
+        # Update other profile information
+        current_user.username = request.form['username']
 
-    # Commit changes to the database
-    db.session.commit()
+        # Commit changes to the database
+        db.session.commit()
 
-    flash('Profile updated successfully!', 'success')
-    return redirect(url_for('profile'))
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('profile'))
+    except KeyError as e:
+        flash(f'Error updating profile: {str(e)}', 'danger')
+        return redirect(url_for('profile'))
 
 
 @app.route('/blog/<int:blog_id>', methods=['GET', 'POST'])
